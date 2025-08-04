@@ -14,18 +14,20 @@
         <thead>
             <tr class="thread-dark">
                 <th>번호</th>
-                <th>제목</th>
+                <th style="width:50%">제목</th>
+                <th>글쓴이</th>
                 <th>작성일시</th>
             </tr>
         </thead>
         <tbody>
         {% if question_list %}
-            {% for question in question_list %}
+            {% for question in question_list.items %}
             <tr>
-                <td>{{ loop.index }}</td>
+                <td>{{ question_list.total - ((question_list.page-1) * question_list.per_page) - loop.index0 }}</td>
                 <td>
                 <a href="{{ url_for('question.detail', question_id=question.id) }}" > {{question.subject}} </a>
                 </td>
+                <td>{{ question.user.username }}</td>
                 <td>{{ question.create_date }}</td>
             </tr>
             {% endfor %}
@@ -34,6 +36,47 @@
         {% endif %}
         </tbody>
     </table>
+
+    <ul class="pagination justify-content-center">
+        {% if question_list.has_prev %}
+        <il class=page-item"">
+            <a class="page-link" href="?page={{ question_list.prev_num }}">이전</a>
+        </il>
+        {% else %}
+        <il class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+        </il>
+        {% endif %}
+
+        {% for page_num in question_list.iter_pages() %}
+            {% if page_num %}
+                {% if page_num != question_list.page %}
+                    <il class=page-item"">
+                        <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                    </il>
+                    {% else %}
+                    <il class="page-item activate" aria-current="page">
+                        <a class="page-link" href="#">{{ page_num }}</a>
+                    </il>
+                {% endif %}
+            {% else %}
+                <il class="disabled" aria-current="page">
+                    <a class="page-link" href="#">...</a>
+                </il>
+            {% endif %}
+        {% endfor %}
+
+        {% if question_list.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{question_list.next_num}}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#"></a>
+        </li>
+        {% endif %}
+    </ul>
+
     <a href="{{ url_for('question.create') }}" class="btn btn-primary">질문 등록하기</a>
 </div>
 {% endblock %}

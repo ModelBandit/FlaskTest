@@ -6,10 +6,17 @@
     <link rel="stylesheet" href="{{url_for('static', filename='bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
     <title>게시판</title>
+
 </head>
 <body>
-
+{% include "navbar.html" %}
 {% block content %}
+{% endblock %}
+
+    <script src="{{url_for('static', filename='jquery-3.7.1.min.js')}}"></script>
+    <script src="{{url_for('static', filename='bootstrap.min.js')}}"></script>
+
+{% block script %}
 {% endblock %}
 </body>
 </html>

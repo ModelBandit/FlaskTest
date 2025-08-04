@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <a class = "navbar-brand" href="{{ url_for('main.index')}}">Bulletin</a>
+    <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse flex-grow-0" id="navbarNav">
+        {% if g.user %}
+        <ul class ="navbar-nav">
+            <il class="nav-item">
+                <a class="nav-link" href="{{url_for('auth.logout')}}">로그아웃</a>
+            </il>
+        </ul>
+        {% else %}
+        <ul class ="navbar-nav">
+            <il class="nav-item">
+                <a class="nav-link" href="{{url_for('auth.signup')}}">계정생성</a>
+            </il>
+            <il class="nav-item">
+                <a class="nav-link" href="{{url_for('auth.login')}}">로그인</a>
+            </il>
+        </ul>
+        {% endif %}
+    </div>
+</nav>
+</body>
+</html>

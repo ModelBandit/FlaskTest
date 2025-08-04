@@ -1,11 +1,15 @@
-from flask import Blueprint, render_template, request, redirect, url_for
-from pybo.models import Question, Answer
+from flask import Blueprint, render_template, request, redirect, url_for, g
+from pybo.models import Question
 from ..forms import QuestionForm, AnswerForm
 from datetime import datetime
 
+
 from pybo import db
 
+from pybo.views.auth_views import login_required
+
 bp = Blueprint("question", __name__, url_prefix='/question')
+
 
 @bp.route("/hello")
 def hello_pybo():
@@ -13,10 +17,13 @@ def hello_pybo():
 
 @bp.route('/list')
 def _list():
+    page = request.args.get('page', type=int, default=1)
     question_list = Question.query.order_by(Question.create_date.desc())
+    question_list = question_list.paginate(page=page, per_page=10)
     return render_template('question/question_list.html', question_list=question_list)
 
 @bp.route('/create', methods=('GET', 'POST'))
+@login_required
 def create():
     form = QuestionForm()
 
@@ -25,7 +32,8 @@ def create():
         question = Question(
             subject=form.subject.data,
             content=form.content.data,
-            create_date=datetime.now()
+            create_date=datetime.now(),
+            user=g.user
         )
         db.session.add(question)
         db.session.commit()
